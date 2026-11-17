@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | Klaro{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Admin Dashboard</h1>
+  <p>Welcome, {{ user.first_name|default:user.username }}. You can manage users and review submitted corrections.</p>
+  <div class="grid">
+    <div class="stat"><strong>{{ total_users }}</strong>Total users</div>
+    <div class="stat"><strong>{{ admin_count }}</strong>Admins</div>
+    <div class="stat"><strong>{{ editor_count }}</strong>Editors</div>
+    <div class="stat"><strong>{{ citizen_count }}</strong>Citizens</div>
+  </div>
+</div>
+<div class="card">
+  <h2>Admin tools</h2>
+  <ul>
+    <li>User management (create editors, change roles): use <em>Manage Users</em> in the navigation.</li>
+    <li>Correction review queue: coming in a later phase.</li>
+  </ul>
+</div>
+{% endblock %}

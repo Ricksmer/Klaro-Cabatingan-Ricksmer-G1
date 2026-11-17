@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Citizen Dashboard | Klaro{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Citizen Dashboard</h1>
+  <p>Welcome, {{ user.first_name|default:user.username }}. Browse politicians and learn about civic topics.</p>
+  <div class="grid">
+    <div class="stat"><strong>Browse politicians</strong>Coming in a later phase</div>
+    <div class="stat"><strong>Civic dictionary</strong>Coming in a later phase</div>
+  </div>
+</div>
+{% endblock %}
