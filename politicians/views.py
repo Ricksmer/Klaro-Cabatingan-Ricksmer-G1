@@ -1,11 +1,12 @@
 from django.contrib import messages
+from django.db.models import Exists, OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.decorators import role_required
 from accounts.models import User
 
 from .forms import PoliticianForm
-from .models import Politician
+from .models import Politician, Position, TermOfOffice
 
 EDITOR_ROLES = (User.Role.EDITOR, User.Role.ADMIN)
 
@@ -62,3 +63,51 @@ def politician_delete(request, pk):
         messages.success(request, f'{name} was deleted.')
         return redirect('politicians:manage')
     return render(request, 'politicians/confirm_delete.html', {'politician': politician})
+
+# ---- Public read-only views (visitors, citizens, editors, admins) ----
+
+def directory(request):
+    q = request.GET.get('q', '').strip()
+    position_id = request.GET.get('position', '')
+
+    latest_rank = (
+        TermOfOffice.objects.filter(politician=OuterRef('pk'))
+        .order_by('-start_year')
+        .values('position__rank')[:1]
+    )
+    politicians = (
+        Politician.objects.select_related('party')
+        .prefetch_related('terms__position')
+        .annotate(rank=Subquery(latest_rank))
+        .order_by('rank', 'last_name', 'first_name')
+    )
+
+    # Search: every word must match a name or party
+    for word in q.split():
+        politicians = politicians.filter(
+            Q(first_name__icontains=word) | Q(last_name__icontains=word)
+            | Q(party__name__icontains=word) | Q(party__abbreviation__icontains=word)
+        )
+
+    # Filter by office level
+    if position_id.isdigit():
+        politicians = politicians.filter(
+            Exists(TermOfOffice.objects.filter(
+                politician=OuterRef('pk'), position_id=int(position_id),
+            ))
+        )
+
+    return render(request, 'politicians/directory.html', {
+        'politicians': politicians,
+        'positions': Position.objects.all(),
+        'q': q,
+        'selected_position': position_id,
+    })
+
+
+def detail(request, pk):
+    politician = get_object_or_404(
+        Politician.objects.select_related('party', 'created_by').prefetch_related('terms__position'),
+        pk=pk,
+    )
+    return render(request, 'politicians/detail.html', {'politician': politician})
