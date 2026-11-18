@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ politician.full_name }} | Klaro{% endblock %}
+{% block content %}
+<p><a href="{% url 'politicians:directory' %}">&larr; Back to directory</a></p>
+{% with term=politician.current_term %}
+<div class="card">
+  <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
+    {% if politician.photo %}
+      <img class="avatar" src="{{ politician.photo.url }}" alt="Photo of {{ politician.full_name }}">
+    {% else %}
+      <div class="avatar">{{ politician.first_name|slice:":1" }}{{ politician.last_name|slice:":1" }}</div>
+    {% endif %}
+    <div>
+      <h1 style="margin-top:0;">{{ politician.full_name }}</h1>
+      {% if term %}<span class="badge">{{ term.position.name }}</span>{% endif %}
+      <dl class="profile" style="margin-top:1rem;">
+        <dt>Party</dt><dd>{{ politician.party.name|default:"Independent" }}</dd>
+        <dt>Term of office</dt>
+        <dd>
+          {% for t in politician.terms.all %}
+            {{ t.position.name }}, {{ t.start_year }}–{{ t.end_year }}{% if not forloop.last %}<br>{% endif %}
+          {% empty %}—{% endfor %}
+        </dd>
+        <dt>Birth date</dt><dd>{{ politician.birth_date|date:"F j, Y" }}</dd>
+        <dt>Age</dt><dd>{{ politician.birth_date|timesince }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Biography</h2>
+  {{ politician.biography|linebreaks }}
+</div>
+
+{% if user.role == 'editor' or user.role == 'admin' %}
+<p>
+  <a class="btn" href="{% url 'politicians:edit' politician.pk %}">Edit</a>
+  <a class="btn secondary" href="{% url 'politicians:delete' politician.pk %}">Delete</a>
+</p>
+{% endif %}
+{% endwith %}
+{% endblock %}
