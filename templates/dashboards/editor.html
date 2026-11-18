@@ -5,7 +5,8 @@
   <h1>Editor Dashboard</h1>
   <p>Welcome, {{ user.first_name|default:user.username }}. You can maintain politician information and submit corrections for admin review.</p>
   <div class="grid">
-    <div class="stat"><strong>Politician profiles</strong>Coming in a later phase</div>
+    <div class="stat"><strong>Politician profiles</strong>
+      <a class="btn" href="{% url 'politicians:manage' %}">Manage profiles</a></div>
     <div class="stat"><strong>Submit corrections</strong>Coming in a later phase</div>
   </div>
 </div>

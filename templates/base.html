@@ -28,6 +28,11 @@
     .field label { display:block; font-weight:700; margin-bottom:.3rem; }
     .field input[type=text], .field input[type=email], .field input[type=password] {
       width:100%; padding:.6rem; border:3px solid var(--ink); font:inherit; background:#fff; }
+    .field select, .field textarea, .field input[type=date], .field input[type=number] {
+      width:100%; padding:.6rem; border:3px solid var(--ink); font:inherit; background:#fff; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:3px solid var(--ink); padding:.5rem .7rem; text-align:left; }
+    th { background:var(--accent); }
     .field small { display:block; color:#555; margin-top:.3rem; }
     .field small ul { margin:.3rem 0 0 1.1rem; padding:0; }
     .err { color:var(--red); font-weight:600; margin:.3rem 0 0; }
@@ -51,9 +56,11 @@
       {% if user.is_authenticated %}
         {% if user.role == 'admin' %}
           <a href="{% url 'accounts:admin_dashboard' %}">Admin Dashboard</a>
+          <a href="{% url 'politicians:manage' %}">Politicians</a>
           {% if user.is_staff %}<a href="{% url 'admin:index' %}">Manage Users</a>{% endif %}
         {% elif user.role == 'editor' %}
           <a href="{% url 'accounts:editor_dashboard' %}">Editor Dashboard</a>
+          <a href="{% url 'politicians:manage' %}">Politicians</a>
         {% else %}
           <a href="{% url 'accounts:citizen_dashboard' %}">Citizen Dashboard</a>
         {% endif %}

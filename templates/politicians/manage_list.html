@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Manage Politicians | Klaro{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Politician profiles</h1>
+  <p><a class="btn" href="{% url 'politicians:add' %}">Add politician</a></p>
+  {% if politicians %}
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Position</th><th>Term</th><th>Party</th><th>Added by</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+      {% for p in politicians %}
+        {% with term=p.current_term %}
+        <tr>
+          <td>{{ p.full_name }}</td>
+          <td>{{ term.position.name|default:"—" }}</td>
+          <td>{% if term %}{{ term.start_year }}–{{ term.end_year }}{% else %}—{% endif %}</td>
+          <td>{{ p.party.name|default:"Independent" }}</td>
+          <td>{{ p.created_by.username|default:"—" }}</td>
+          <td>
+            <a href="{% url 'politicians:edit' p.pk %}">Edit</a> ·
+            <a href="{% url 'politicians:delete' p.pk %}">Delete</a>
+          </td>
+        </tr>
+        {% endwith %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>No politician profiles yet. Add the first one.</p>
+  {% endif %}
+</div>
+{% endblock %}
