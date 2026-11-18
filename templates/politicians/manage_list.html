@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}Manage Politicians | Klaro{% endblock %}
+{% block nav_politicians %}active{% endblock %}
 {% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">Directory</p><h1>Politician profiles</h1></div>
+  <a class="btn" href="{% url 'politicians:add' %}">Add politician</a>
+</div>
 <div class="card">
-  <h1>Politician profiles</h1>
-  <p><a class="btn" href="{% url 'politicians:add' %}">Add politician</a></p>
   {% if politicians %}
-  <div style="overflow-x:auto;">
+  <div class="table-wrap">
     <table>
       <thead>
-        <tr><th>Name</th><th>Position</th><th>Term</th><th>Party</th><th>Added by</th><th>Actions</th></tr>
+        <tr><th>Name</th><th>Position</th><th>Term</th><th>Party</th><th>Added by</th><th>Actions</th>
+            <td>
+            <a href="{% url 'politicians:detail' p.pk %}">View</a> ·
+            <a href="{% url 'politicians:edit' p.pk %}">Edit</a> ·
+            <a href="{% url 'politicians:delete' p.pk %}">Delete</a>
+          </td></tr>
+        
       </thead>
       <tbody>
       {% for p in politicians %}
@@ -30,7 +39,10 @@
     </table>
   </div>
   {% else %}
-    <p>No politician profiles yet. Add the first one.</p>
+    <div class="empty-state">
+      <strong>No politician profiles yet</strong>
+      Add the first public official to begin building the directory.
+    </div>
   {% endif %}
 </div>
 {% endblock %}
