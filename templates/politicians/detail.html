@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ politician.full_name }} | Klaro{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'politicians:directory' %}"><i data-lucide="arrow-left" aria-hidden="true"></i>Back to directory</a>
+{% with term=politician.current_term %}
+<div class="card">
+  <div class="detail-hero">
+    {% if politician.photo %}
+      <img class="avatar" src="{{ politician.photo.url }}" alt="Photo of {{ politician.full_name }}">
+    {% else %}
+      <div class="avatar" aria-hidden="true">{{ politician.first_name|slice:":1" }}{{ politician.last_name|slice:":1" }}</div>
+    {% endif %}
+    <div class="detail-name">
+      <p class="eyebrow">Public profile</p>
+      <h1>{{ politician.full_name }}</h1>
+      {% if term %}<span class="position-badge"><i data-lucide="landmark" aria-hidden="true"></i>{{ term.position.name }}</span>{% endif %}
+      <dl class="profile-facts" style="margin-top:1.25rem;">
+        <div class="fact-row"><dt><i data-lucide="flag" aria-hidden="true"></i>Party</dt><dd>{{ politician.party.name|default:"Independent" }}</dd></div>
+        <div class="fact-row"><dt><i data-lucide="calendar-range" aria-hidden="true"></i>Term of office</dt>
+        <dd>
+          {% for t in politician.terms.all %}
+            {{ t.position.name }}, {{ t.start_year }}–{{ t.end_year }}{% if not forloop.last %}<br>{% endif %}
+          {% empty %}—{% endfor %}
+        </dd>
+        </div>
+        <div class="fact-row"><dt><i data-lucide="cake" aria-hidden="true"></i>Birth date</dt><dd>{{ politician.birth_date|date:"F j, Y" }}</dd></div>
+        <div class="fact-row"><dt><i data-lucide="clock-3" aria-hidden="true"></i>Age</dt><dd>{{ politician.birth_date|timesince }}</dd></div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Biography</h2>
+  {{ politician.biography|linebreaks }}
+</div>
+
+{% if user.role == 'editor' or user.role == 'admin' %}
+<div class="form-actions">
+  <a class="btn" href="{% url 'politicians:edit' politician.pk %}"><i data-lucide="pencil" aria-hidden="true"></i>Edit profile</a>
+  <a class="btn danger" href="{% url 'politicians:delete' politician.pk %}"><i data-lucide="trash-2" aria-hidden="true"></i>Delete</a>
+</div>
+{% endif %}
+{% endwith %}
+{% endblock %}

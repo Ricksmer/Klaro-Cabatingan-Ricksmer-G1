@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}My Profile | Klaro{% endblock %}
+{% block nav_profile %}active{% endblock %}
 {% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">Account</p><h1>My profile</h1></div>
+  <a class="btn" href="{% url 'accounts:profile_edit' %}"><i data-lucide="pencil" aria-hidden="true"></i>Edit profile</a>
+</div>
 <div class="card">
-  <h1>My Profile</h1>
-  <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
+  <div class="profile-layout">
+    <aside class="profile-aside">
     {% if user.profile_photo %}
       <img class="avatar" src="{{ user.profile_photo.url }}" alt="Profile photo">
     {% else %}
       <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
     {% endif %}
-    <dl class="profile">
-      <dt>Username</dt><dd>{{ user.username }}</dd>
-      <dt>Name</dt><dd>{{ user.get_full_name|default:"Not set" }}</dd>
-      <dt>Email</dt><dd>{{ user.email }}</dd>
-      <dt>Contact number</dt><dd>{{ user.contact_number|default:"Not set" }}</dd>
-      <dt>Role</dt><dd>{{ user.get_role_display }}</dd>
-      <dt>Joined</dt><dd>{{ user.date_joined|date:"F j, Y" }}</dd>
+      <h2>{{ user.get_full_name|default:user.username }}</h2>
+      <span class="role-badge">{{ user.get_role_display }}</span>
+    </aside>
+    <dl class="profile-facts">
+      <div class="fact-row"><dt><i data-lucide="at-sign" aria-hidden="true"></i>Username</dt><dd>{{ user.username }}</dd></div>
+      <div class="fact-row"><dt><i data-lucide="user" aria-hidden="true"></i>Name</dt><dd>{{ user.get_full_name|default:"Not set" }}</dd></div>
+      <div class="fact-row"><dt><i data-lucide="mail" aria-hidden="true"></i>Email</dt><dd>{{ user.email }}</dd></div>
+      <div class="fact-row"><dt><i data-lucide="phone" aria-hidden="true"></i>Contact number</dt><dd>{{ user.contact_number|default:"Not set" }}</dd></div>
+      <div class="fact-row"><dt><i data-lucide="calendar-days" aria-hidden="true"></i>Joined</dt><dd>{{ user.date_joined|date:"F j, Y" }}</dd></div>
     </dl>
   </div>
-  <p style="margin-top:1.5rem;"><a class="btn" href="{% url 'accounts:profile_edit' %}">Edit profile</a></p>
 </div>
 {% endblock %}

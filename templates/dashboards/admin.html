@@ -1,21 +1,36 @@
 {% extends 'base.html' %}
 {% block title %}Admin Dashboard | Klaro{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
 {% block content %}
-<div class="card">
-  <h1>Admin Dashboard</h1>
-  <p>Welcome, {{ user.first_name|default:user.username }}. You can manage users and review submitted corrections.</p>
-  <div class="grid">
-    <div class="stat"><strong>{{ total_users }}</strong>Total users</div>
-    <div class="stat"><strong>{{ admin_count }}</strong>Admins</div>
-    <div class="stat"><strong>{{ editor_count }}</strong>Editors</div>
-    <div class="stat"><strong>{{ citizen_count }}</strong>Citizens</div>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">Administration</p>
+    <h1>Welcome back, {{ user.first_name|default:user.username }}.</h1>
   </div>
 </div>
 <div class="card">
-  <h2>Admin tools</h2>
-  <ul>
-    <li>User management (create editors, change roles): use <em>Manage Users</em> in the navigation.</li>
-    <li>Correction review queue: coming in a later phase.</li>
-  </ul>
+  <div class="grid">
+    <div class="stat-card"><div class="stat-meta"><span class="stat-label">Total users</span><i data-lucide="users" aria-hidden="true"></i></div><strong>{{ total_users }}</strong></div>
+    <div class="stat-card gold"><div class="stat-meta"><span class="stat-label">Administrators</span><i data-lucide="shield-check" aria-hidden="true"></i></div><strong>{{ admin_count }}</strong></div>
+    <div class="stat-card"><div class="stat-meta"><span class="stat-label">Editors</span><i data-lucide="pencil-ruler" aria-hidden="true"></i></div><strong>{{ editor_count }}</strong></div>
+    <div class="stat-card gold"><div class="stat-meta"><span class="stat-label">Citizens</span><i data-lucide="contact-round" aria-hidden="true"></i></div><strong>{{ citizen_count }}</strong></div>
+  </div>
+</div>
+<div class="card">
+  <div class="page-heading">
+    <div><p class="eyebrow">Workspace</p><h2>Administrative tools</h2></div>
+  </div>
+  <div class="action-grid">
+    {% if user.is_staff %}
+    <a class="action-card" href="{% url 'admin:index' %}">
+      <div><span class="action-icon"><i data-lucide="users" aria-hidden="true"></i></span><h3>User management</h3><p>Create editors and manage account roles and permissions.</p></div>
+      <span class="action-link">Open user management<i data-lucide="arrow-right" aria-hidden="true"></i></span>
+    </a>
+    {% endif %}
+    <a class="action-card" href="{% url 'politicians:manage' %}">
+      <div><span class="action-icon"><i data-lucide="landmark" aria-hidden="true"></i></span><h3>Politician profiles</h3><p>Add, update, and maintain public official information.</p></div>
+      <span class="action-link">Manage profiles<i data-lucide="arrow-right" aria-hidden="true"></i></span>
+    </a>
+  </div>
 </div>
 {% endblock %}

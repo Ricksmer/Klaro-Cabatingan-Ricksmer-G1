@@ -121,3 +121,26 @@ Klaro-Cabatingan-Ricksmer-G1/
 
 - SQLite is not used. The project requires PostgreSQL (Supabase).
 - Uploaded profile photos are stored in a local `media/` folder, which is excluded from Git.
+
+
+## Core Feature: Politician Profiles (Project Development 2)
+
+Editors and Admins maintain profiles of the President, Vice President and senators. Each profile stores the name, position, term of office, party (blank for independents), birth date, biography and an optional photo. Visitors and Citizens can browse the directory, search by name or party, filter by office level and open a full profile page.
+
+| Role | Access |
+|---|---|
+| Visitor / Citizen | Browse directory, search, filter, view profile details (read-only) |
+| Editor | Everything above, plus add, edit and delete profiles (Manage profiles) |
+| Admin | Same as Editor, plus manage users and lookup data in Django admin |
+
+**Models:** `Politician`, `Party`, `Position`, `TermOfOffice` (see `politicians/models.py`). Each profile records its creator with a ForeignKey to `User`.
+
+**Setup for this feature**
+1. Install dependencies and configure `.env` as described above, then run `python manage.py migrate`. This creates the tables and the three positions (President, Vice President, Senator).
+2. Create an Admin with `python manage.py createsuperuser`, and an Editor in `/admin/` (role `editor`).
+3. Log in as the Editor, open **Manage profiles** and add politicians. Records are stored in Supabase.
+4. Browse the public directory at `/politicians/`.
+
+**Branching:** `main` (stable), `develop` (integration), and `feature/*` branches merged through pull requests: `feature/politician-editor-crud`, `feature/politician-directory`, `feature/ui-redesign`.
+
+**Documentation:** the Project Development 2 completion report is in `docs/Klaro-Cabatingan-Ricksmer-G1-PD2.pdf`.

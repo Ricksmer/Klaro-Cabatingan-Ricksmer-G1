@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 {% block title %}Citizen Dashboard | Klaro{% endblock %}
+{% block nav_dashboard_citizen %}active{% endblock %}
 {% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">Citizen portal</p><h1>Welcome back, {{ user.first_name|default:user.username }}.</h1></div>
+</div>
 <div class="card">
-  <h1>Citizen Dashboard</h1>
-  <p>Welcome, {{ user.first_name|default:user.username }}. Browse politicians and learn about civic topics.</p>
-  <div class="grid">
-    <div class="stat"><strong>Browse politicians</strong>Coming in a later phase</div>
-    <div class="stat"><strong>Civic dictionary</strong>Coming in a later phase</div>
+  <div class="action-grid">
+    <a class="action-card" href="{% url 'politicians:directory' %}">
+      <div><span class="action-icon"><i data-lucide="library" aria-hidden="true"></i></span><h3>Politician directory</h3><p>Explore public officials, positions, parties, and terms.</p></div>
+      <span class="action-link">Open directory<i data-lucide="arrow-right" aria-hidden="true"></i></span>
+    </a>
+    <div class="action-card">
+      <div><span class="action-icon"><i data-lucide="book-open" aria-hidden="true"></i></span><h3>Civic dictionary</h3><p>Learn the terms and institutions that shape public life.</p></div>
+      <span class="action-link">Coming soon</span>
+    </div>
   </div>
 </div>
 {% endblock %}

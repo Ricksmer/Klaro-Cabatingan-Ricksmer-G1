@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Delete Politician | Klaro{% endblock %}
+{% block nav_politicians %}active{% endblock %}
+{% block nav_politicians_editor %}active{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">Directory</p><h1>Delete profile</h1></div>
+</div>
+<div class="card narrow">
+  <div class="empty-state-icon" style="margin:0 0 1rem;"><i data-lucide="triangle-alert" aria-hidden="true"></i></div>
+  <h2>Delete {{ politician.full_name }}?</h2>
+  <p>This permanently removes the profile and its term records. This action cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn danger"><i data-lucide="trash-2" aria-hidden="true"></i>Delete permanently</button>
+      <a class="btn secondary" href="{% url 'politicians:manage' %}"><i data-lucide="x" aria-hidden="true"></i>Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
