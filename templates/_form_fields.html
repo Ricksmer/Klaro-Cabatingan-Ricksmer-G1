@@ -1,8 +1,11 @@
 {% if form.non_field_errors %}
-  <div class="alert error">{{ form.non_field_errors }}</div>
+  <div class="alert error" role="alert">
+    <i data-lucide="circle-alert" aria-hidden="true"></i>
+    <span>{{ form.non_field_errors }}</span>
+  </div>
 {% endif %}
 {% for field in form %}
-  <div class="field">
+  <div class="field{% if field.errors %} has-error{% endif %}">
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
     {{ field }}
     {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}

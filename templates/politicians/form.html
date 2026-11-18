@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }} | Klaro{% endblock %}
 {% block nav_politicians %}active{% endblock %}
+{% block nav_politicians_editor %}active{% endblock %}
 {% block content %}
 <div class="page-heading">
   <div><p class="eyebrow">Directory</p><h1>{{ title }}</h1></div>
@@ -10,8 +11,8 @@
     {% csrf_token %}
     {% include '_form_fields.html' %}
     <div class="form-actions">
-      <button type="submit" class="btn">Save profile</button>
-      <a class="btn secondary" href="{% url 'politicians:manage' %}">Cancel</a>
+      <button type="submit" class="btn"><i data-lucide="save" aria-hidden="true"></i>Save profile</button>
+      <a class="btn secondary" href="{% url 'politicians:manage' %}"><i data-lucide="x" aria-hidden="true"></i>Cancel</a>
     </div>
   </form>
 </div>
