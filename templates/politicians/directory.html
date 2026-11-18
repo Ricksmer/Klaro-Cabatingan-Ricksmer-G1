@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Politicians | Klaro{% endblock %}
+{% block nav_directory %}active{% endblock %}
 {% block content %}
-<div class="card">
-  <h1>Politician profiles</h1>
-  <form method="get" style="display:flex; gap:.7rem; flex-wrap:wrap; align-items:flex-end;">
-    <div class="field" style="flex:2; min-width:200px; margin:0;">
-      <label for="q">Search</label>
+<div class="page-heading">
+  <div><p class="eyebrow">Public directory</p><h1>Filipino public officials</h1></div>
+</div>
+<div class="card search-panel">
+  <form class="search-form" method="get">
+    <div class="field">
+      <label for="q"><i data-lucide="search" aria-hidden="true"></i>Search</label>
       <input type="text" id="q" name="q" value="{{ q }}" placeholder="Name or party">
     </div>
-    <div class="field" style="flex:1; min-width:160px; margin:0;">
-      <label for="position">Office level</label>
+    <div class="field">
+      <label for="position"><i data-lucide="landmark" aria-hidden="true"></i>Office</label>
       <select id="position" name="position">
         <option value="">All offices</option>
         {% for pos in positions %}
@@ -17,32 +20,36 @@
         {% endfor %}
       </select>
     </div>
-    <button class="btn" type="submit">Search</button>
-    <a class="btn secondary" href="{% url 'politicians:directory' %}">Reset</a>
+    <button class="btn" type="submit"><i data-lucide="search" aria-hidden="true"></i>Search</button>
+    <a class="btn secondary" href="{% url 'politicians:directory' %}"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Reset</a>
   </form>
 </div>
-
-<p><strong>{{ politicians|length }}</strong> profile{{ politicians|length|pluralize }} found</p>
-
-<div class="grid">
+<div class="results-line"><span><strong>{{ politicians|length }}</strong> profile{{ politicians|length|pluralize }} found</span></div>
+<div class="directory-grid">
   {% for p in politicians %}
     {% with term=p.current_term %}
-    <a class="card" href="{% url 'politicians:detail' p.pk %}"
-       style="text-decoration:none; color:inherit; margin:0; display:flex; gap:1rem; align-items:center;">
+    <a class="politician-card" href="{% url 'politicians:detail' p.pk %}">
+      <div class="politician-card-head">
       {% if p.photo %}
-        <img class="avatar" src="{{ p.photo.url }}" alt="" style="width:64px; height:64px;">
+        <img class="avatar" src="{{ p.photo.url }}" alt="Photo of {{ p.full_name }}">
       {% else %}
-        <div class="avatar" style="width:64px; height:64px; font-size:1.5rem;">{{ p.first_name|slice:":1" }}{{ p.last_name|slice:":1" }}</div>
+        <div class="avatar" aria-hidden="true">{{ p.first_name|slice:":1" }}{{ p.last_name|slice:":1" }}</div>
       {% endif %}
       <div>
-        <strong>{{ p.full_name }}</strong><br>
-        {{ term.position.name|default:"—" }}{% if term %} · {{ term.start_year }}–{{ term.end_year }}{% endif %}<br>
-        <small>{{ p.party.name|default:"Independent" }}</small>
+        <h2>{{ p.full_name }}</h2>
+        {% if term %}<span class="position-badge">{{ term.position.name }}</span>{% endif %}
+      </div>
+      </div>
+      <div class="politician-card-meta">
+        <p><strong>Party</strong> · {{ p.party.name|default:"Independent" }}</p>
+        <p>{% if term %}<strong>Term</strong> · {{ term.start_year }}–{{ term.end_year }}{% else %}<strong>Term</strong> · —{% endif %}</p>
       </div>
     </a>
     {% endwith %}
   {% empty %}
-    <p>No profiles match your search.</p>
+    <div class="empty-state" style="grid-column:1/-1;">
+      <div class="empty-state-inner"><span class="empty-state-icon"><i data-lucide="search-x" aria-hidden="true"></i></span><h2>No profiles found</h2><p>Try a different name, party, or office.</p></div>
+    </div>
   {% endfor %}
 </div>
 {% endblock %}
